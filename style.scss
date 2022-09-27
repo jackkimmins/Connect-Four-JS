@@ -24,15 +24,23 @@ main {
             margin: 0;
         }
 
-        button {
-            background-color: white;
-            border: 1px solid gray;
-            font-size: 0.8rem;
-            padding: 5px;
-            cursor: pointer;
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-            &:hover {
-                background-color: lightgray;
+            button {
+                background-color: white;
+                border: 1px solid gray;
+                font-size: 0.8rem;
+                padding: 5px;
+                cursor: pointer;
+
+                margin-left: 10px;
+    
+                &:hover {
+                    background-color: lightgray;
+                }
             }
         }
     }

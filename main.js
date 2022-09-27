@@ -1,6 +1,7 @@
 //Randomly pick starting player
 let currentPlayer = Math.random() < 0.5 ? 'blue' : 'red';
 let gameWinner = "NONE";
+let autoPlay = false;
 
 //Function to populate the cells with the column number
 const AddColNumsAttr = () => {
@@ -108,9 +109,7 @@ function PlaceChip(cell) {
     const col = $(`.cell[data-col="${colNum}"]`);
     const emptyCell = col.filter((i, c) => c.innerHTML === '');
 
-    if (emptyCell.length === 0) {
-        return;
-    }
+    if (emptyCell.length === 0) return;
 
     const selectedCell = emptyCell[emptyCell.length - 1];
 
@@ -160,7 +159,53 @@ $('#btnRestart').click(function() {
     location.reload();
 });
 
+//#autoplay
+$('#autoplay').click(function() {
+    if ($(this).is(':checked'))
+    {
+        localStorage.setItem('autoplay', true);
+        autoPlay = true;
+    }
+    else
+    {
+        localStorage.setItem('autoplay', false);
+        autoPlay = false;
+    }
+});
+
 $(document).ready(function() {
     AddColNumsAttr();
     SetStatusIndicator(currentPlayer);
+
+    if (localStorage.getItem('autoplay') === 'true')
+    {
+        $('#autoplay').prop('checked', true);
+        autoPlay = true;
+    }
 });
+
+setInterval(function() {
+    if (autoPlay)
+    {
+        if (gameWinner !== "NONE")
+        {
+            new Audio('ding.mp3').play();
+    
+            $('#status').text(`${gameWinner} wins!`).css('color', gameWinner);
+    
+            setTimeout(function() {
+                location.reload();
+            }, 3000);
+        }
+        else
+        {
+            const emptyCells = $('.cell').filter((i, c) => c.innerHTML === '');
+    
+            if (emptyCells.length === 0) location.reload();
+        
+            PlaceChip(emptyCells[Math.floor(Math.random() * emptyCells.length)]);
+        
+            gameWinner = CheckForWinner();
+        }
+    }
+}, 500);
